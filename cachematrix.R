@@ -1,15 +1,43 @@
-## Put comments here that give an overall description of what your
-## functions do
+## This functions can be used for caching the inversed matrix of an input matrix (must be symetric and inversable).
+##This can lead to considerable performance increases in loops, because with the same input matrix over
+##several loop runs the inverse matrix can be loaded and not recalculated for each run.
 
-## Write a short comment describing this function
+##makeCacheMatrix calculates the invere matrix and caches it.
 
 makeCacheMatrix <- function(x = matrix()) {
-
+    m <- NULL
+    set <- function(y) {
+        x <<- y
+        m <<- NULL
+    }
+    get <- function() x
+    setsolve <- function(solve) m <<- solve
+    getsolve <- function() m
+    list(set = set, get = get,
+        setsolve = setsolve,
+        getsolve = getsolve)
+    
 }
 
 
-## Write a short comment describing this function
+## cacheSolve checks if the invesed matrix is already cached (returns chached inversed matrix and text) 
+##or not (calculate and return inversed matrix. 
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+    m <- x$getsolve()
+    if(!is.null(m)) {
+        message("getting cached data")
+        return(m)
+    }
+    data <- x$get()
+    m <- solve(data, ...)
+    x$setsolve(m)
+    m
 }
+    
+    
+    
+
+
+
+
